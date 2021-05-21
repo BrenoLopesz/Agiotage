@@ -15,39 +15,12 @@ import java.io.IOException;
 public class MyJSON {
     static String fileName = "loans.json";
 
-    private static void createFileIfDoesntExist(Context context) {
-        try {
-            new File(context.getFilesDir().getPath() + "/" + fileName).createNewFile();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static boolean saveData(Context context, String data) {
-        try {
-            FileWriter writer = new FileWriter(context.getFilesDir().getPath() + "/" + fileName);
-            writer.write(data);
-            writer.close();
-            return true;
-        } catch (IOException e) {
-            return false;
-        }
-    }
-
-    public static BufferedReader getData(Context context) {
-        createFileIfDoesntExist(context);
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(context.getFilesDir().getPath() + "/" + fileName));
-            return br;
-        } catch (IOException e) {
-            return null;
-        }
-    }
-
     public static void addDebt(float value, String name, String description, Context context) {
         // Pega a lista de Debtor atual e adiciona o novo Debtor
         Debtor[] debtors = getDebtors(context);
         Debtor[] new_debtors;
+
+        FileHandler.setUp(context, fileName);
 
         Gson gson = new Gson();
         Debtor debtor = getDebtorByName(name, debtors);
@@ -57,7 +30,7 @@ public class MyJSON {
             debtor.addDebt(new Debt(value, description));
             // Converte Debtor[] para JSON
             String json = gson.toJson(debtors);
-            saveData(context, json);
+            FileHandler.saveData(json);
             return;
         }
 
@@ -78,7 +51,7 @@ public class MyJSON {
         // Converte Debtor[] para JSON
         String json = gson.toJson(new_debtors);
 
-        saveData(context, json);
+        FileHandler.saveData(json);
     }
 
     public static Debtor[] getDebtors(Context context) {
@@ -87,7 +60,8 @@ public class MyJSON {
         if(!new File(context.getFilesDir().getPath() + "/" + fileName).exists())
             return new Debtor[0];
 
-        BufferedReader br = getData(context);
+        FileHandler.setUp(context, fileName);
+        BufferedReader br = FileHandler.getData();
         Debtor[] debtors = gson.fromJson(br, Debtor[].class);
 
         return debtors;

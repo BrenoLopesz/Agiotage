@@ -149,7 +149,8 @@ public class EditActivity extends AppCompatActivity {
                 debt.setPayed(isPayed);
 
                 String json = new Gson().toJson(debtors);
-                MyJSON.saveData(getApplicationContext(), json);
+                FileHandler.setUp(getApplicationContext(), "loans.json");
+                FileHandler.saveData(json);
 
                 Intent intent = new Intent(EditActivity.this, LoanListActivity.class);
                 intent.putExtra("debtors", new Gson().toJson(debtors));
@@ -171,7 +172,8 @@ public class EditActivity extends AppCompatActivity {
                 debtor.removeDebt(debt);
 
                 String json = new Gson().toJson(debtors);
-                MyJSON.saveData(getApplicationContext(), json);
+                FileHandler.setUp(getApplicationContext(), "loans.json");
+                FileHandler.saveData(json);
 
                 Intent intent = new Intent(EditActivity.this, LoanListActivity.class);
                 intent.putExtra("debtors", new Gson().toJson(debtors));

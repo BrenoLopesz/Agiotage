@@ -21,6 +21,11 @@ public class FileHandler {
         fileName = _fileName;
     }
 
+    public static void setUp(Context _context, String _fileName) {
+        setContext(_context);
+        setFileName(_fileName);
+    }
+
     public static void createFileIfDoesntExist() {
         if(isContextNull() || isFileNameEmpty())
             return;
