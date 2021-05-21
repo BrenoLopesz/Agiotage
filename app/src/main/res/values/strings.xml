@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Agiotage</string>
+    <string name="add_loan">Adicionar empréstimo</string>
+    <string name="value">Valor</string>
+    <string name="description">Descrição</string>
+    <string name="to_continue">Continuar</string>
+    <string name="loan_name">Nome do devedor</string>
+    <string name="finish">Finalizar</string>
+    <string name="list_of">Lista de</string>
+    <string name="loans">Empréstimos</string>
+    <string name="is_it_payed">Está pago?</string>
+    <string name="save">Salvar</string>
+    <string name="delete">Deletar</string>
+    <string name="report">Relatório</string>
+</resources>

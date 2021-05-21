@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="MainAddText" parent="TextAppearance.AppCompat">
+        <item name="android:fontFamily">@font/roboto</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">26dp</item>
+        <item name="android:textColor">#4F4F4F</item>
+    </style>
+    <style name="NumberInput" parent="TextAppearance.AppCompat">
+        <item name="android:fontFamily">@font/roboto_bold</item>
+        <item name="android:layout_width">305dp</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:background">@drawable/under_input</item>
+        <item name="android:ems">10</item>
+        <item name="android:paddingBottom">10dp</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textColor">#B7D064</item>
+        <item name="android:textSize">38sp</item>
+
+    </style>
+    <style name="MainButton" parent="TextAppearance.AppCompat">
+        <item name="android:fontFamily">@font/roboto_bold</item>
+        <item name="android:textColor">#FFF</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:layout_height">56dp</item>
+        <item name="android:layout_width">216dp</item>
+        <item name="android:background">@drawable/main_button</item>
+        <item name="android:paddingBottom">6dp</item>
+    </style>
+</resources>
