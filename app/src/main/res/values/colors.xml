@@ -9,4 +9,5 @@
     <color name="white">#FFFFFFFF</color>
     <color name="unselected">#868686</color>
     <color name="green_line">#B7D064</color>
+    <color name="invisible">#FFFFFF</color>
 </resources>

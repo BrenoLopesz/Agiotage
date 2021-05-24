@@ -18,6 +18,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         debtors = MyJSON.getDebtors(getApplicationContext());
 
+        // TODO: Atualizar o "debtors" em toda transição de cena
+        // (Ex.: Adicionou uma debt e depois transicionou para o report)
+
         Button add_loan = findViewById(R.id.add_loan_button);
         Button view_loans = findViewById(R.id.view_loans_button);
         Button view_report = findViewById(R.id.view_report_button);
@@ -46,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, ReportActivity.class);
+                intent.putExtra("debtors", new Gson().toJson(debtors));
                 startActivity(intent);
                 overridePendingTransition(0, 0);
             }
