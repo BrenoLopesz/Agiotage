@@ -4,11 +4,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 
+import com.github.mikephil.charting.charts.Chart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.Entry;
@@ -32,6 +35,7 @@ public class ReportActivity extends AppCompatActivity {
         suffixes.put(1_000_000L, "M");
     }
 
+    ChartMode[] modes = { ChartMode.YEAR, ChartMode.MONTH, ChartMode.WEEK };
     Debtor[] debtors;
 
     @Override
@@ -41,8 +45,22 @@ public class ReportActivity extends AppCompatActivity {
         debtors = new Gson().fromJson(getIntent().getStringExtra("debtors"), Debtor[].class);
 
         LineChart chart = findViewById(R.id.chart);
-        ChartMode mode = ChartMode.MONTH;
-        String[] labels = ChartData.getLabels(mode);
+        ChartMode mode = ChartMode.YEAR;
+        fillChartData(chart, mode);
+
+        Button[] chartModeButtons = {
+                (Button) findViewById(R.id.button_yearly),
+                (Button) findViewById(R.id.button_monthly),
+                (Button) findViewById(R.id.button_weekly),
+        };
+
+        SelectableButtons selectables = new SelectableButtons(getApplicationContext(), chartModeButtons);
+        selectables.setSelected(findViewById(R.id.button_yearly), false);
+        selectables.onChange((i) -> fillChartData(chart, modes[i]));
+        setReturnButton();
+    }
+
+    private void fillChartData(Chart chart, ChartMode mode) {
         float[] dataSet = ChartData.getData(mode, debtors);
 
         // Adiciona as informações no chart
@@ -54,13 +72,10 @@ public class ReportActivity extends AppCompatActivity {
         }
 
         LineDataSet lineDataSet = new LineDataSet(entries, "Label"); // add entries to dataset
-        styleLineDataSet(lineDataSet);
         LineData lineData = new LineData(lineDataSet);
         chart.setData(lineData);
-        chart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(labels));
-        styleChart(chart);
-
-        setReturnButton();
+        styleLineDataSet(lineDataSet);
+        styleChart((LineChart) chart);
     }
 
     private void styleLineDataSet(LineDataSet lineDataSet) {
@@ -112,7 +127,7 @@ public class ReportActivity extends AppCompatActivity {
 
     /** Formata os valores no gráfico. <br> (Exemplo: 2200 => 2.2k, 3550500 => 3.5M) */
     public static String format(long value) {
-        //Long.MIN_VALUE == -Long.MIN_VALUE so we need an adjustment here
+        //Long.MIN_VALUE == -Long.MIN_VALUE
         if (value == Long.MIN_VALUE) return format(Long.MIN_VALUE + 1);
         if (value < 0) return "-" + format(-value);
         if (value < 1000) return Long.toString(value); //deal with easy case
@@ -121,7 +136,7 @@ public class ReportActivity extends AppCompatActivity {
         Long divideBy = e.getKey();
         String suffix = e.getValue();
 
-        long truncated = value / (divideBy / 10); //the number part of the output times 10
+        long truncated = value / (divideBy / 10);
         boolean hasDecimal = truncated < 100 && (truncated / 10d) != (truncated / 10f);
         return hasDecimal ? (truncated / 10d) + suffix : (truncated / 10) + suffix;
     }
