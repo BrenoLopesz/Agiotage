@@ -30,7 +30,6 @@ public class SelectableButtons {
             return;
         }
 
-        Log.i("isSelected", String.valueOf(isAnyButtonSelected()));
         if(isAnyButtonSelected()) {
             // Torna o botão selecionado, instantaneamente, em não selecionado
             TransitionDrawable selectedButtonTransition = (TransitionDrawable) getSelectedButton().getBackground();

@@ -46,56 +46,167 @@
 
         </LinearLayout>
 
-        <com.github.mikephil.charting.charts.LineChart
-            android:id="@+id/chart"
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="200dp" />
+            android:layout_height="match_parent">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="33dp"
-            android:orientation="horizontal"
-            android:paddingStart="40dp"
-            android:paddingEnd="40dp">
-
-            <Button
-                android:id="@+id/button_yearly"
-                android:layout_width="0dp"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="12dp"
-                android:layout_weight="0.5"
-                android:background="@drawable/reverse_transition"
-                android:fontFamily="@font/roboto_light"
-                android:text="Anual"
-                android:textAllCaps="false"
-                android:textColor="#868686"
-                android:textSize="13sp" />
+                android:orientation="vertical">
 
-            <Button
-                android:id="@+id/button_monthly"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="12dp"
-                android:layout_weight="0.5"
-                android:background="@drawable/reverse_transition"
-                android:fontFamily="@font/roboto_light"
-                android:text="Mensal"
-                android:textAllCaps="false"
-                android:textColor="#868686"
-                android:textSize="13sp" />
+                <com.github.mikephil.charting.charts.LineChart
+                    android:id="@+id/chart"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp">
 
-            <Button
-                android:id="@+id/button_weekly"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.5"
-                android:background="@drawable/reverse_transition"
-                android:fontFamily="@font/roboto_light"
-                android:text="Semanal"
-                android:textAllCaps="false"
-                android:textColor="#868686"
-                android:textSize="13sp" />
-        </LinearLayout>
+                </com.github.mikephil.charting.charts.LineChart>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="33dp"
+                    android:orientation="horizontal"
+                    android:paddingStart="40dp"
+                    android:paddingEnd="40dp">
+
+                    <Button
+                        android:id="@+id/button_yearly"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="12dp"
+                        android:layout_weight="0.5"
+                        android:background="@drawable/reverse_transition"
+                        android:fontFamily="@font/roboto_light"
+                        android:text="Anual"
+                        android:textAllCaps="false"
+                        android:textColor="#868686"
+                        android:textSize="13sp" />
+
+                    <Button
+                        android:id="@+id/button_monthly"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="12dp"
+                        android:layout_weight="0.5"
+                        android:background="@drawable/reverse_transition"
+                        android:fontFamily="@font/roboto_light"
+                        android:text="Mensal"
+                        android:textAllCaps="false"
+                        android:textColor="#868686"
+                        android:textSize="13sp" />
+
+                    <Button
+                        android:id="@+id/button_weekly"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        android:background="@drawable/reverse_transition"
+                        android:fontFamily="@font/roboto_light"
+                        android:text="Semanal"
+                        android:textAllCaps="false"
+                        android:textColor="#868686"
+                        android:textSize="13sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/loan_total"
+                        style="@style/MoneyText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="40dp"
+                        android:text="@string/zero_money" />
+
+                    <TextView
+                        android:id="@+id/textView9"
+                        style="@style/UnderMoneyText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Total em empréstimos a receber" />
+
+                    <TextView
+                        android:id="@+id/loans_this_month"
+                        style="@style/MoneyText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="30dp"
+                        android:text="@string/zero_money" />
+
+                    <TextView
+                        android:id="@+id/textView11"
+                        style="@style/UnderMoneyText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Empréstimos esse mês" />
+
+                    <TextView
+                        android:id="@+id/loan_recovered_this_month"
+                        style="@style/MoneyText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="30dp"
+                        android:text="@string/zero_money" />
+
+                    <TextView
+                        android:id="@+id/textView13"
+                        style="@style/UnderMoneyText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Recuperados esse mês" />
+
+                    <TextView
+                        android:id="@+id/debtors_amount"
+                        style="@style/MoneyText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="30dp"
+                        android:text="0" />
+
+                    <TextView
+                        android:id="@+id/textView15"
+                        style="@style/UnderMoneyText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Pessoas lhe devem" />
+
+                    <TextView
+                        android:id="@+id/new_debtors_amount"
+                        style="@style/MoneyText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="30dp"
+                        android:text="0" />
+
+                    <TextView
+                        android:id="@+id/textView17"
+                        style="@style/UnderMoneyText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Novos devedores esse mês" />
+
+                    <TextView
+                        android:id="@+id/ex_debtors_amount"
+                        style="@style/MoneyText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="30dp"
+                        android:text="0" />
+
+                    <TextView
+                        android:id="@+id/textView19"
+                        style="@style/UnderMoneyText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="50dp"
+                        android:text="Quitaram suas dívidas esse mês" />
+                </LinearLayout>
+
+            </LinearLayout>
+        </ScrollView>
 
     </LinearLayout>
 

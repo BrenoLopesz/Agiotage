@@ -12,4 +12,5 @@
     <string name="save">Salvar</string>
     <string name="delete">Deletar</string>
     <string name="report">Relatório</string>
+    <string name="zero_money">R$ 0,00</string>
 </resources>

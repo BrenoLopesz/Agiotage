@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.Chart;
 import com.github.mikephil.charting.charts.LineChart;
@@ -58,6 +59,7 @@ public class ReportActivity extends AppCompatActivity {
         selectables.setSelected(findViewById(R.id.button_yearly), false);
         selectables.onChange((i) -> fillChartData(chart, modes[i]));
         setReturnButton();
+        setDebtorsInfo();
     }
 
     private void fillChartData(Chart chart, ChartMode mode) {
@@ -75,7 +77,7 @@ public class ReportActivity extends AppCompatActivity {
         LineData lineData = new LineData(lineDataSet);
         chart.setData(lineData);
         styleLineDataSet(lineDataSet);
-        styleChart((LineChart) chart);
+        styleChart((LineChart) chart, mode);
     }
 
     private void styleLineDataSet(LineDataSet lineDataSet) {
@@ -98,8 +100,9 @@ public class ReportActivity extends AppCompatActivity {
         });
     }
 
-    private void styleChart(LineChart chart) {
+    private void styleChart(LineChart chart, ChartMode mode) {
         int color = ContextCompat.getColor(getApplicationContext(), R.color.white);
+        String[] labels = ChartData.getLabels(mode);
         chart.getXAxis().setDrawGridLines(false);
         chart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
         chart.getXAxis().setTextSize(10);
@@ -112,8 +115,19 @@ public class ReportActivity extends AppCompatActivity {
         chart.getAxisLeft().setTextSize(14);
         chart.getDescription().setEnabled(false);
         chart.getLegend().setEnabled(false);
-        chart.setExtraOffsets(30, 30, 30, 15);
+        chart.setExtraOffsets(30, 30, 30, 30);
+        chart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(labels));
         chart.invalidate();
+    }
+
+    private void setDebtorsInfo() {
+        DebtorsInfo infos = new DebtorsInfo(debtors);
+        ((TextView) findViewById(R.id.loan_total)).setText(infos.getInfo(InfoType.LOAN_TOTAL));
+        ((TextView) findViewById(R.id.loans_this_month)).setText(infos.getInfo(InfoType.LOANS_THIS_MONTH));
+        ((TextView) findViewById(R.id.loan_recovered_this_month)).setText(infos.getInfo(InfoType.LOAN_TOTAL_RECOVERED_THIS_MONTH));
+        ((TextView) findViewById(R.id.debtors_amount)).setText(infos.getInfo(InfoType.DEBTORS_AMOUNT));
+        ((TextView) findViewById(R.id.new_debtors_amount)).setText(infos.getInfo(InfoType.NEW_DEBTORS_AMOUNT));
+        ((TextView) findViewById(R.id.ex_debtors_amount)).setText(infos.getInfo(InfoType.EX_DEBTORS_AMOUNT));
     }
 
     private void setReturnButton() {

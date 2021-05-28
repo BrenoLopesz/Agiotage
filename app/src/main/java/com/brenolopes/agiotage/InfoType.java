@@ -1,0 +1,5 @@
+package com.brenolopes.agiotage;
+
+public enum InfoType {
+    LOAN_TOTAL, LOANS_THIS_MONTH, LOAN_TOTAL_RECOVERED_THIS_MONTH, DEBTORS_AMOUNT, NEW_DEBTORS_AMOUNT, EX_DEBTORS_AMOUNT
+}
