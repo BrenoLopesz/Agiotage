@@ -8,8 +8,17 @@ import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Layout;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewStub;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.Chart;
@@ -39,15 +48,18 @@ public class ReportActivity extends AppCompatActivity {
     ChartMode[] modes = { ChartMode.YEAR, ChartMode.MONTH, ChartMode.WEEK };
     Debtor[] debtors;
 
+    // ReportData é responsável por qual tipo de report será exibido (geral ou individual)
+    // ChartData é responsável por qual tipo de chart será exibido
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_report);
         debtors = new Gson().fromJson(getIntent().getStringExtra("debtors"), Debtor[].class);
 
+        ReportData.setTotalDebtors(debtors);
+        changeReportMode(ReportMode.GENERAL);
         LineChart chart = findViewById(R.id.chart);
-        ChartMode mode = ChartMode.YEAR;
-        fillChartData(chart, mode);
 
         Button[] chartModeButtons = {
                 (Button) findViewById(R.id.button_yearly),
@@ -55,15 +67,30 @@ public class ReportActivity extends AppCompatActivity {
                 (Button) findViewById(R.id.button_weekly),
         };
 
-        SelectableButtons selectables = new SelectableButtons(getApplicationContext(), chartModeButtons);
-        selectables.setSelected(findViewById(R.id.button_yearly), false);
-        selectables.onChange((i) -> fillChartData(chart, modes[i]));
+        Button[] reportModeButtons = {
+                (Button) findViewById(R.id.button_general),  
+                (Button) findViewById(R.id.button_individual),
+        };
+
+        // Cria os botões selecionáveis do ChartMode
+        SelectableButtons chartModeSelectables = new SelectableButtons(getApplicationContext(), chartModeButtons);
+        chartModeSelectables.setSelected(findViewById(R.id.button_yearly), false);
+        chartModeSelectables.onChange((i) -> fillChartData(chart, modes[i]));
+
+        // Cria os botões selecionáveis do ReportMode
+        SelectableButtons reportModeSelectables = new SelectableButtons(getApplicationContext(), reportModeButtons);
+        reportModeSelectables.setSelected(findViewById(R.id.button_general), false);
+        reportModeSelectables.onChange((i) -> changeReportMode(i == 0? ReportMode.GENERAL : ReportMode.INDIVIDUAL));
+
         setReturnButton();
-        setDebtorsInfo();
     }
 
     private void fillChartData(Chart chart, ChartMode mode) {
-        float[] dataSet = ChartData.getData(mode, debtors);
+        ChartData.setMode(mode);
+        float[] dataSet = ChartData.getData(mode,
+                ReportData.getMode() == ReportMode.GENERAL ?
+                        ReportData.getDebtors() :
+                        new Debtor[] { ReportData.getSelectedDebtor() });
 
         // Adiciona as informações no chart
         List<Entry> entries = new ArrayList<>();
@@ -78,6 +105,39 @@ public class ReportActivity extends AppCompatActivity {
         chart.setData(lineData);
         styleLineDataSet(lineDataSet);
         styleChart((LineChart) chart, mode);
+    }
+
+    private void changeReportMode(ReportMode mode) {
+        ReportData.setMode(mode);
+        LineChart chart = findViewById(R.id.chart);
+        fillChartData(chart, ChartData.getMode());
+
+        int layoutId = 0;
+        if(mode == ReportMode.GENERAL)
+            layoutId = R.layout.general_infos;
+        if(mode == ReportMode.INDIVIDUAL)
+            layoutId = R.layout.individual_infos;
+
+        ViewGroup holder = (ViewGroup) findViewById(R.id.holder);
+        LayoutInflater inflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
+        View childLayout = inflater.inflate(layoutId,
+                holder, false);
+
+        if(holder == null) {
+            ViewStub stub = (ViewStub) findViewById(R.id.debt_infos);
+            stub.setLayoutResource(layoutId);
+            stub.inflate();
+        } else {
+            holder.removeAllViews();
+            holder.addView(childLayout);
+        }
+
+        if(mode == ReportMode.INDIVIDUAL)
+            fillDropdown();
+
+        setDebtorsInfo();
+        // Mudar o layout abaixo da chart
+        // Mudar a data do chart
     }
 
     private void styleLineDataSet(LineDataSet lineDataSet) {
@@ -120,10 +180,20 @@ public class ReportActivity extends AppCompatActivity {
         chart.invalidate();
     }
 
+    // Define as infos abaixo do gráfico
     private void setDebtorsInfo() {
-        DebtorsInfo infos = new DebtorsInfo(debtors);
+        ReportMode mode = ReportData.getMode();
+        Spinner dropdown = findViewById(R.id.spinner);
+        DebtorsInfo infos = new DebtorsInfo(mode == ReportMode.GENERAL?
+                debtors :
+                new Debtor[] { ReportData.getSelectedDebtor() });
+
         ((TextView) findViewById(R.id.loan_total)).setText(infos.getInfo(InfoType.LOAN_TOTAL));
         ((TextView) findViewById(R.id.loans_this_month)).setText(infos.getInfo(InfoType.LOANS_THIS_MONTH));
+
+        Log.i("mode", String.valueOf(mode));
+        // Não preenche o restante das infos caso o modo seja individual
+        if(mode == ReportMode.INDIVIDUAL) return;
         ((TextView) findViewById(R.id.loan_recovered_this_month)).setText(infos.getInfo(InfoType.LOAN_TOTAL_RECOVERED_THIS_MONTH));
         ((TextView) findViewById(R.id.debtors_amount)).setText(infos.getInfo(InfoType.DEBTORS_AMOUNT));
         ((TextView) findViewById(R.id.new_debtors_amount)).setText(infos.getInfo(InfoType.NEW_DEBTORS_AMOUNT));
@@ -136,6 +206,33 @@ public class ReportActivity extends AppCompatActivity {
             Intent intent = new Intent(ReportActivity.this, MainActivity.class);
             startActivity(intent);
             overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        });
+    }
+
+    private void fillDropdown() {
+        Spinner dropdown = findViewById(R.id.spinner);
+        String[] debtor_names = new String[debtors.length];
+
+
+        for(int i = 0; i < debtors.length; i++) {
+            debtor_names[i] = debtors[i].getName();
+        }
+
+        // Criar layout do spinner 
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.spinner, debtor_names);
+        dropdown.setAdapter(adapter);
+        dropdown.setSelection(ReportData.getSelectedDebtorIndex());
+
+        dropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                ReportData.setSelectedDebtor(position);
+                setDebtorsInfo();
+                fillChartData(findViewById(R.id.chart), ChartData.getMode());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
         });
     }
 

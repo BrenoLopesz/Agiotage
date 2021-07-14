@@ -10,4 +10,6 @@
     <color name="unselected">#868686</color>
     <color name="green_line">#B7D064</color>
     <color name="invisible">#FFFFFF</color>
+    <color name="divider">#DDD</color>
+    <color name="spinner_text_color">#333</color>
 </resources>

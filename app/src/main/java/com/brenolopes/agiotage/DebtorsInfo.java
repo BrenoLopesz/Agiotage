@@ -1,6 +1,9 @@
 package com.brenolopes.agiotage;
 
+import android.util.Log;
+
 import java.text.DecimalFormat;
+import java.util.Date;
 
 public class DebtorsInfo {
     private final Debtor[] debtors;
@@ -8,6 +11,8 @@ public class DebtorsInfo {
     public DebtorsInfo(Debtor[] _debtors) {
         this.debtors = _debtors;
     }
+
+    // TODO: Corrigir bug de Debtor continuar existindo após deletar todos os Debts
 
     public String getInfo(InfoType infoType) {
         switch(infoType) {

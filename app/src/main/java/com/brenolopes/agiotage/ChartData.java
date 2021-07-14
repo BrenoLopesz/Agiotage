@@ -4,6 +4,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class ChartData {
+    private static ChartMode mode = ChartMode.YEAR;
     private static String[] meses = new String[] { "Janeiro", "Fevereiro", "Março",
             "Abril", "Maio", "Junho",
             "Julho", "Agosto", "Setembro",
@@ -93,4 +94,8 @@ public class ChartData {
 
         return null;
     }
+
+    public static ChartMode getMode() { return mode; }
+
+    public static void setMode(ChartMode _mode) { mode = _mode; }
 }
