@@ -94,6 +94,7 @@ public class EditActivity extends AppCompatActivity {
         setReturnButton();
         setSaveButton();
         setDeleteButton();
+        MenuBar.setUp(this, (Debtor[]) getIntent().getSerializableExtra("debtors"));
     }
 
     private ObjectAnimator getAnimation(Button button) {
@@ -171,6 +172,10 @@ public class EditActivity extends AppCompatActivity {
                 Debt debt = debtor.getDebt(index);
                 debtor.removeDebt(debt);
 
+                // Deleta o Debtor da lista se ele não possuir mais nenhum Debt
+                if(debtor.getDebts().length == 0)
+                    debtors = removeDebtorFromArray(debtors, debtor);
+
                 String json = new Gson().toJson(debtors);
                 FileHandler.setUp(getApplicationContext(), "loans.json");
                 FileHandler.saveData(json);
@@ -181,5 +186,13 @@ public class EditActivity extends AppCompatActivity {
                 overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             }
         });
+    }
+
+    private Debtor[] removeDebtorFromArray(Debtor[] _debtors, Debtor _debtor) {
+        Debtor[] copyDebtors = new Debtor[_debtors.length - 1];
+        for(int i = 0; i < copyDebtors.length; i++)
+            if(copyDebtors[i] != _debtor) copyDebtors[i] = _debtors[i];
+
+        return copyDebtors;
     }
 }

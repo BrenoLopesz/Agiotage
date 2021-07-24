@@ -13,7 +13,6 @@ import android.widget.ImageView;
 
 import com.google.gson.Gson;
 
-import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,9 +29,16 @@ public class LoanListActivity extends AppCompatActivity implements LoanListAdapt
         super.onCreate(savedInstanceState);
         setContentView(R.layout.loan_list);
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
-        debtors = new Gson().fromJson(getIntent().getStringExtra("debtors"), Debtor[].class);
+        debtors = MyJSON.getDebtors(getApplicationContext());
         HashMap<String, List<Debt>> debts_by_day = separateDebtsByDay(debtors);
         List<String> sortedDays = sortDays(debts_by_day);
+
+        if(debtors.length == 0) {
+            Intent intent = new Intent(this, EmptyList.class);
+            startActivity(intent);
+            overridePendingTransition(0, 0);
+            return;
+        }
 
         for(String day : sortedDays) {
             Log.i("day", day);
@@ -43,13 +49,14 @@ public class LoanListActivity extends AppCompatActivity implements LoanListAdapt
         }
 
         // set up the RecyclerView
-        RecyclerView recyclerView = findViewById(R.id.rvAnimals);
+        RecyclerView recyclerView = findViewById(R.id.rvDebtors);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new LoanListAdapter(this, debts_by_day, sortedDays, debtors);
+        adapter = new LoanListAdapter(this, debts_by_day, sortedDays, debtors, false);
         adapter.setClickListener(this);
         recyclerView.setAdapter(adapter);
 
         setReturnButton();
+        MenuBar.setUp(this, debtors);
     }
 
     @Override

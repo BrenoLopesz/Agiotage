@@ -24,6 +24,8 @@ public class DebtorsInfo {
                 return formatMoney(getRecoveredLoansThisMonth());
             case DEBTORS_AMOUNT:
                 return String.valueOf(getDebtorsAmount());
+            case ACTIVE_DEBTORS_AMOUNT:
+                return String.valueOf(getActiveDebtorsAmount());
             case NEW_DEBTORS_AMOUNT:
                 return String.valueOf(getNewDebtorsAmount());
             case EX_DEBTORS_AMOUNT:
@@ -64,6 +66,15 @@ public class DebtorsInfo {
 
     private int getDebtorsAmount() {
         return debtors.length;
+    }
+
+    private int getActiveDebtorsAmount() {
+        int active_debtors = 0;
+        for(Debtor debtor : debtors)
+            if(hasUnpayedDebt(debtor))
+                active_debtors++;
+
+        return active_debtors;
     }
 
     /** Número de novos devedores este mês */

@@ -29,6 +29,7 @@ public class AddLoanActivity extends AppCompatActivity {
         debtors = new Gson().fromJson(getIntent().getStringExtra("debtors"), Debtor[].class);
 
         transitionScenes(0);
+        MenuBar.setUp(this, debtors);
     }
 
     // Cria um array de buttons que transiciona pro item do array de scenes correspondente

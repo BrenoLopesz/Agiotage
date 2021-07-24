@@ -56,11 +56,11 @@ public class MyJSON {
 
     public static Debtor[] getDebtors(Context context) {
         Gson gson = new Gson();
+        FileHandler.setUp(context, fileName);
 
         if(!new File(context.getFilesDir().getPath() + "/" + fileName).exists())
             return new Debtor[0];
 
-        FileHandler.setUp(context, fileName);
         BufferedReader br = FileHandler.getData();
         Debtor[] debtors = gson.fromJson(br, Debtor[].class);
 

@@ -55,7 +55,7 @@ public class ReportActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_report);
-        debtors = new Gson().fromJson(getIntent().getStringExtra("debtors"), Debtor[].class);
+        debtors = MyJSON.getDebtors(getApplicationContext());
 
         ReportData.setTotalDebtors(debtors);
         changeReportMode(ReportMode.GENERAL);
@@ -83,6 +83,7 @@ public class ReportActivity extends AppCompatActivity {
         reportModeSelectables.onChange((i) -> changeReportMode(i == 0? ReportMode.GENERAL : ReportMode.INDIVIDUAL));
 
         setReturnButton();
+        MenuBar.setUp(this, debtors);
     }
 
     private void fillChartData(Chart chart, ChartMode mode) {
@@ -195,7 +196,7 @@ public class ReportActivity extends AppCompatActivity {
         // Não preenche o restante das infos caso o modo seja individual
         if(mode == ReportMode.INDIVIDUAL) return;
         ((TextView) findViewById(R.id.loan_recovered_this_month)).setText(infos.getInfo(InfoType.LOAN_TOTAL_RECOVERED_THIS_MONTH));
-        ((TextView) findViewById(R.id.debtors_amount)).setText(infos.getInfo(InfoType.DEBTORS_AMOUNT));
+        ((TextView) findViewById(R.id.debtors_amount)).setText(infos.getInfo(InfoType.ACTIVE_DEBTORS_AMOUNT));
         ((TextView) findViewById(R.id.new_debtors_amount)).setText(infos.getInfo(InfoType.NEW_DEBTORS_AMOUNT));
         ((TextView) findViewById(R.id.ex_debtors_amount)).setText(infos.getInfo(InfoType.EX_DEBTORS_AMOUNT));
     }

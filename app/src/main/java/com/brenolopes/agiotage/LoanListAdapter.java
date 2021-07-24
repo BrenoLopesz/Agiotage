@@ -26,13 +26,15 @@ public class LoanListAdapter extends RecyclerView.Adapter<LoanListAdapter.ViewHo
     private ItemClickListener mClickListener;
     private Debtor[] debtors;
     private List<Debt> firstDebtsOfDays = new ArrayList<Debt>();
+    private boolean miniList;
 
     // data is passed into the constructor
-    LoanListAdapter(Context context, HashMap<String, List<Debt>> data, List<String> _sortedDays, Debtor[] _debtors) {
+    LoanListAdapter(Context context, HashMap<String, List<Debt>> data, List<String> _sortedDays, Debtor[] _debtors, boolean _miniList) {
         this.mInflater = LayoutInflater.from(context);
         this.debts_by_day = data;
         this.sortedDays = _sortedDays;
         this.debtors = _debtors;
+        this.miniList = _miniList;
 
         for(String day : sortedDays) {
             List<Debt> debts = debts_by_day.get(day);
@@ -66,7 +68,7 @@ public class LoanListAdapter extends RecyclerView.Adapter<LoanListAdapter.ViewHo
 
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy");
 
-        if(!isStartOfDay(debt))
+        if(!isStartOfDay(debt) || miniList)
             holder.dateDiv.setVisibility(View.GONE);
         else {
             holder.dateTitle.setText(sdf.format(debt.getDate()));
@@ -80,6 +82,8 @@ public class LoanListAdapter extends RecyclerView.Adapter<LoanListAdapter.ViewHo
         int total = 0;
         for(List<Debt> list : debts_by_day.values()) {
             total += list.size();
+            if(miniList && total >= 3)
+                return 3;
         }
         return total;
     }

@@ -13,4 +13,8 @@
     <string name="delete">Deletar</string>
     <string name="report">Relatório</string>
     <string name="zero_money">R$ 0,00</string>
+    <string name="no_loans">Você não possui nenhum empréstimo em aberto.</string>
+    <string name="welcome">Bem-vindo,</string>
+    <string name="set_name">Informe seu nome</string>
+    <string name="name_surname">Nome e sobrenome</string>
 </resources>
